@@ -16,10 +16,11 @@ func getTimestamp() int64 {
 
 func handleRequest(writer http.ResponseWriter, req *http.Request) {
 	if req.Method == http.MethodPost {
+		log.Println("Processing request")
 		_, err := ioutil.ReadAll(req.Body)
 
 		if err != nil {
-			log.Printf("Could not read request body")
+			log.Println("Could not read request body")
 
 			msg, _ := json.Marshal(map[string]string{
 				"status": "error",
@@ -42,6 +43,8 @@ func handleRequest(writer http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	log.Println("Server listening on port 5000")
+
 	http.HandleFunc("/", handleRequest)
 	http.ListenAndServe(":5000", nil)
 }
