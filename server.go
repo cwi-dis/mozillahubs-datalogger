@@ -7,7 +7,6 @@ import (
 	"log"
 	"math"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -34,9 +33,9 @@ func handleRequest(writer http.ResponseWriter, req *http.Request) {
 
 		// TODO parse body and save to file
 
-		msg, _ := json.Marshal(map[string]string{
-			"status": "ok",
-			"time":   strconv.FormatFloat(getTimestamp(), 'f', 7, 64),
+		msg, _ := json.Marshal(&successResponse{
+			Status: "ok",
+			Time:   getTimestamp(),
 		})
 
 		fmt.Fprintf(writer, string(msg))
