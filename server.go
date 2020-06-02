@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -35,7 +36,7 @@ func handleRequest(writer http.ResponseWriter, req *http.Request) {
 		msg, _ := json.Marshal(map[string]string{
 			"status": "OK",
 			"type":   "HTTPD",
-			"time":   string(getTimestamp()),
+			"time":   strconv.FormatInt(getTimestamp(), 10),
 		})
 
 		fmt.Fprintf(writer, string(msg))
