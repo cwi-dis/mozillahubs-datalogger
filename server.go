@@ -25,19 +25,20 @@ func getTimestamp() float64 {
 	return float64(now.UnixNano()) / math.Pow10(9)
 }
 
-func writeToFile(path string, body string) {
+func writeToFile(path string, body string) error {
 	outFile, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0744)
 
 	if err != nil {
-		log.Println("Could not open output file")
-		return
+		return err
 	}
 
 	defer outFile.Close()
 
 	if _, err := outFile.WriteString(body); err != nil {
-		log.Println("Could not write to output file")
+		return err
 	}
+
+	return nil
 }
 
 func handleRequest(writer http.ResponseWriter, req *http.Request) {
