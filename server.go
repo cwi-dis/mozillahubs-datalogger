@@ -11,6 +11,11 @@ import (
 	"time"
 )
 
+type successResponse struct {
+	Status string  `json:"status"`
+	Time   float64 `json:"time"`
+}
+
 func getTimestamp() float64 {
 	now := time.Now()
 	return float64(now.UnixNano()) / math.Pow10(9)
