@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
 	"strconv"
 	"time"
 )
 
-func getTimestamp() int64 {
+func getTimestamp() float64 {
 	now := time.Now()
-	return now.UnixNano()
+	return float64(now.UnixNano()) / math.Pow10(9)
 }
 
 func handleRequest(writer http.ResponseWriter, req *http.Request) {
@@ -36,7 +37,7 @@ func handleRequest(writer http.ResponseWriter, req *http.Request) {
 		msg, _ := json.Marshal(map[string]string{
 			"status": "OK",
 			"type":   "HTTPD",
-			"time":   strconv.FormatInt(getTimestamp(), 10),
+			"time":   strconv.FormatFloat(getTimestamp(), 'f', 7, 64),
 		})
 
 		fmt.Fprintf(writer, string(msg))
