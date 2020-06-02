@@ -30,8 +30,7 @@ func handleRequest(writer http.ResponseWriter, req *http.Request) {
 		// TODO parse body and save to file
 
 		msg, _ := json.Marshal(map[string]string{
-			"status": "OK",
-			"type":   "HTTPD",
+			"status": "ok",
 			"time":   strconv.FormatFloat(getTimestamp(), 'f', 7, 64),
 		})
 
