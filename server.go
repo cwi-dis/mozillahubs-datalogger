@@ -23,12 +23,7 @@ func handleRequest(writer http.ResponseWriter, req *http.Request) {
 
 		if err != nil {
 			log.Println("Could not read request body")
-
-			msg, _ := json.Marshal(map[string]string{
-				"status": "error",
-			})
-
-			http.Error(writer, string(msg), http.StatusBadRequest)
+			http.Error(writer, "{ \"status\": \"error\" }", http.StatusBadRequest)
 			return
 		}
 
