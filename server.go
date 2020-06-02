@@ -15,6 +15,10 @@ type successResponse struct {
 	Time   float64 `json:"time"`
 }
 
+type errorResponse struct {
+	Status string `json:"status"`
+}
+
 func getTimestamp() float64 {
 	now := time.Now()
 	return float64(now.UnixNano()) / math.Pow10(9)
@@ -27,7 +31,10 @@ func handleRequest(writer http.ResponseWriter, req *http.Request) {
 
 		if err != nil {
 			log.Println("Could not read request body")
-			http.Error(writer, "{ \"status\": \"error\" }", http.StatusBadRequest)
+
+			msg, _ := json.Marshal(&errorResponse{Status: "error"})
+			http.Error(writer, string(msg), http.StatusBadRequest)
+
 			return
 		}
 
