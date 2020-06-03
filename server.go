@@ -34,7 +34,7 @@ func writeToFile(path string, body string) error {
 
 	defer outFile.Close()
 
-	if _, err := outFile.WriteString(body); err != nil {
+	if _, err := outFile.WriteString(body + "\n"); err != nil {
 		return err
 	}
 
