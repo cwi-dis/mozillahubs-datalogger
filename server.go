@@ -79,8 +79,14 @@ func createHandlerWithPath(rootDir string) func(http.ResponseWriter, *http.Reque
 }
 
 func main() {
+	if len(os.Args[1:]) == 0 {
+		fmt.Println("USAGE:", os.Args[0], "saveDir")
+		os.Exit(1)
+	}
+
+	saveDir := os.Args[1]
 	log.Println("Server listening on port 5000")
 
-	http.HandleFunc("/", createHandlerWithPath("/Users/tom/Desktop"))
+	http.HandleFunc("/", createHandlerWithPath(saveDir))
 	http.ListenAndServe(":5000", nil)
 }
