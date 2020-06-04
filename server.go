@@ -47,10 +47,16 @@ func parseRequestBody(body []byte) ([]interface{}, error) {
 	var bodyData []interface{}
 
 	if err := json.Unmarshal(body, &bodyData); err == nil {
+		return bodyData, nil
+	}
+
+	var bodyAsObject interface{}
+
+	if err := json.Unmarshal(body, &bodyAsObject); err != nil {
 		return nil, err
 	}
 
-	return bodyData, nil
+	return []interface{}{bodyAsObject}, nil
 }
 
 func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Request) {
