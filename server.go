@@ -8,6 +8,7 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"path"
 	"time"
 )
 
@@ -56,8 +57,16 @@ func createHandlerWithPath(rootDir string) func(http.ResponseWriter, *http.Reque
 				return
 			}
 
-			// TODO parse body and save to file
+			saveName := path.Join(rootDir, time.Now().Format("datalog-2006-01-02.json"))
 
+			if err := writeToFile(saveName, string(body)); err != nil {
+				log.Println("Could not save data to file")
+
+				msg, _ := json.Marshal(&errorResponse{Status: "error"})
+				http.Error(writer, string(msg), http.StatusBadRequest)
+
+				return
+			}
 
 			msg, _ := json.Marshal(&successResponse{
 				Status: "ok",
