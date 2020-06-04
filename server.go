@@ -58,6 +58,17 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 				return
 			}
 
+			var bodyData []interface{}
+
+			if err := json.Unmarshal(body, &bodyData); err != nil {
+				log.Println("Could not decode body data:", err)
+
+				msg, _ := json.Marshal(&errorResponse{Status: "error"})
+				http.Error(writer, string(msg), http.StatusBadRequest)
+
+				return
+			}
+
 			saveName := path.Join(saveDir, time.Now().Format("datalog-2006-01-02.json"))
 
 			if err := writeToFile(saveName, string(body)); err != nil {
