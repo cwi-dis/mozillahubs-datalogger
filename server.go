@@ -43,7 +43,7 @@ func writeToFile(path string, body string) error {
 	return nil
 }
 
-func createHandlerWithPath(rootDir string) func(http.ResponseWriter, *http.Request) {
+func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Request) {
 	return func(writer http.ResponseWriter, req *http.Request) {
 		if req.Method == http.MethodPost {
 			log.Println("Processing request")
@@ -58,7 +58,7 @@ func createHandlerWithPath(rootDir string) func(http.ResponseWriter, *http.Reque
 				return
 			}
 
-			saveName := path.Join(rootDir, time.Now().Format("datalog-2006-01-02.json"))
+			saveName := path.Join(saveDir, time.Now().Format("datalog-2006-01-02.json"))
 
 			if err := writeToFile(saveName, string(body)); err != nil {
 				log.Println("Could not save data to file:", err)
