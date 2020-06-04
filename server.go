@@ -43,10 +43,21 @@ func writeToFile(path string, body string) error {
 	return nil
 }
 
+func parseRequestBody(body []byte) ([]interface{}, error) {
+	var bodyData []interface{}
+
+	if err := json.Unmarshal(body, &bodyData); err == nil {
+		return nil, err
+	}
+
+	return bodyData, nil
+}
+
 func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Request) {
 	return func(writer http.ResponseWriter, req *http.Request) {
 		if req.Method == http.MethodPost {
 			log.Println("Processing request")
+			var err error
 
 			timestamp := getTimestamp()
 			body, err := ioutil.ReadAll(req.Body)
@@ -60,9 +71,9 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 				return
 			}
 
-			var bodyData []interface{}
+			bodyData, err := parseRequestBody(body)
 
-			if err := json.Unmarshal(body, &bodyData); err != nil {
+			if err != nil {
 				log.Println("Could not decode body data:", err)
 
 				msg, _ := json.Marshal(&errorResponse{Status: "error"})
