@@ -41,7 +41,7 @@ func writeToFile(path string, body string) error {
 	return nil
 }
 
-func handleRequest(rootDir string) func(http.ResponseWriter, *http.Request) {
+func createHandlerWithPath(rootDir string) func(http.ResponseWriter, *http.Request) {
 	return func(writer http.ResponseWriter, req *http.Request) {
 		if req.Method == http.MethodPost {
 			log.Println("Processing request")
@@ -72,6 +72,6 @@ func handleRequest(rootDir string) func(http.ResponseWriter, *http.Request) {
 func main() {
 	log.Println("Server listening on port 5000")
 
-	http.HandleFunc("/", handleRequest("/Users/tom/Desktop"))
+	http.HandleFunc("/", createHandlerWithPath("/Users/tom/Desktop"))
 	http.ListenAndServe(":5000", nil)
 }
