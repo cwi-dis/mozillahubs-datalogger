@@ -41,34 +41,37 @@ func writeToFile(path string, body string) error {
 	return nil
 }
 
-func handleRequest(writer http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPost {
-		log.Println("Processing request")
-		_, err := ioutil.ReadAll(req.Body)
+func handleRequest(rootDir string) func(http.ResponseWriter, *http.Request) {
+	return func(writer http.ResponseWriter, req *http.Request) {
+		if req.Method == http.MethodPost {
+			log.Println("Processing request")
+			body, err := ioutil.ReadAll(req.Body)
 
-		if err != nil {
-			log.Println("Could not read request body")
+			if err != nil {
+				log.Println("Could not read request body")
 
-			msg, _ := json.Marshal(&errorResponse{Status: "error"})
-			http.Error(writer, string(msg), http.StatusBadRequest)
+				msg, _ := json.Marshal(&errorResponse{Status: "error"})
+				http.Error(writer, string(msg), http.StatusBadRequest)
 
-			return
+				return
+			}
+
+			// TODO parse body and save to file
+
+
+			msg, _ := json.Marshal(&successResponse{
+				Status: "ok",
+				Time:   getTimestamp(),
+			})
+
+			fmt.Fprintf(writer, string(msg))
 		}
-
-		// TODO parse body and save to file
-
-		msg, _ := json.Marshal(&successResponse{
-			Status: "ok",
-			Time:   getTimestamp(),
-		})
-
-		fmt.Fprintf(writer, string(msg))
 	}
 }
 
 func main() {
 	log.Println("Server listening on port 5000")
 
-	http.HandleFunc("/", handleRequest)
+	http.HandleFunc("/", handleRequest("/Users/tom/Desktop"))
 	http.ListenAndServe(":5000", nil)
 }
