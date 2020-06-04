@@ -89,7 +89,7 @@ func startServer(saveDir string, port int) {
 }
 
 func main() {
-	port := flag.Int("p", 5000, "Port to listen on")
+	port := flag.Int("p", 6000, "Port to listen on")
 	flag.Parse()
 
 	if len(flag.Args()) == 0 {
