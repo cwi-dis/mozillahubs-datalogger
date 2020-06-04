@@ -72,8 +72,12 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 			}
 
 			saveName := path.Join(saveDir, time.Now().Format("datalog-2006-01-02.json"))
+			saveData, _ := json.Marshal(map[string]interface{}{
+				"time": timestamp,
+				"data": bodyData,
+			})
 
-			if err := writeToFile(saveName, string(body)); err != nil {
+			if err := writeToFile(saveName, string(saveData)); err != nil {
 				log.Println("Could not save data to file:", err)
 
 				msg, _ := json.Marshal(&errorResponse{Status: "error"})
