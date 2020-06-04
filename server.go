@@ -49,7 +49,7 @@ func createHandlerWithPath(rootDir string) func(http.ResponseWriter, *http.Reque
 			body, err := ioutil.ReadAll(req.Body)
 
 			if err != nil {
-				log.Println("Could not read request body")
+				log.Println("Could not read request body:", err)
 
 				msg, _ := json.Marshal(&errorResponse{Status: "error"})
 				http.Error(writer, string(msg), http.StatusBadRequest)
@@ -60,7 +60,7 @@ func createHandlerWithPath(rootDir string) func(http.ResponseWriter, *http.Reque
 			saveName := path.Join(rootDir, time.Now().Format("datalog-2006-01-02.json"))
 
 			if err := writeToFile(saveName, string(body)); err != nil {
-				log.Println("Could not save data to file")
+				log.Println("Could not save data to file:", err)
 
 				msg, _ := json.Marshal(&errorResponse{Status: "error"})
 				http.Error(writer, string(msg), http.StatusBadRequest)
