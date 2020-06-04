@@ -79,6 +79,15 @@ func createHandlerWithPath(rootDir string) func(http.ResponseWriter, *http.Reque
 	}
 }
 
+func startServer(saveDir string, port int) {
+	portSpec := fmt.Sprintf(":%d", port)
+
+	log.Printf("Server listening on port %d", port)
+
+	http.HandleFunc("/", createHandlerWithPath(saveDir))
+	http.ListenAndServe(portSpec, nil)
+}
+
 func main() {
 	port := flag.Int("p", 5000, "Port to listen on")
 	flag.Parse()
@@ -88,11 +97,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	saveDir := flag.Arg(0)
-	portSpec := fmt.Sprintf(":%d", *port)
-
-	log.Printf("Server listening on port %d", *port)
-
-	http.HandleFunc("/", createHandlerWithPath(saveDir))
-	http.ListenAndServe(portSpec, nil)
+	startServer(flag.Arg(0), *port)
 }
