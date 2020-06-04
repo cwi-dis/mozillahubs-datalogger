@@ -75,6 +75,8 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 			})
 
 			fmt.Fprintf(writer, string(msg))
+		} else {
+			http.NotFound(writer, req)
 		}
 	}
 }
