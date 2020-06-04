@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -79,14 +80,19 @@ func createHandlerWithPath(rootDir string) func(http.ResponseWriter, *http.Reque
 }
 
 func main() {
-	if len(os.Args[1:]) == 0 {
-		fmt.Println("USAGE:", os.Args[0], "saveDir")
+	port := flag.Int("p", 5000, "Port to listen on")
+	flag.Parse()
+
+	if len(flag.Args()) == 0 {
+		fmt.Println("USAGE:", os.Args[0], "[-p port] saveDir")
 		os.Exit(1)
 	}
 
-	saveDir := os.Args[1]
-	log.Println("Server listening on port 5000")
+	saveDir := flag.Arg(0)
+	portSpec := fmt.Sprintf(":%d", *port)
+
+	log.Printf("Server listening on port %d", *port)
 
 	http.HandleFunc("/", createHandlerWithPath(saveDir))
-	http.ListenAndServe(":5000", nil)
+	http.ListenAndServe(portSpec, nil)
 }
