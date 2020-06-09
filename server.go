@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -64,6 +65,10 @@ func parseRequestBody(body []byte) (*inputData, error) {
 
 	if err := json.Unmarshal(body, bodyData); err != nil {
 		return nil, err
+	}
+
+	if len(bodyData.Info) == 0 || len(bodyData.Data) == 0 {
+		return nil, errors.New("Required fields are missing or invalid")
 	}
 
 	return bodyData, nil
