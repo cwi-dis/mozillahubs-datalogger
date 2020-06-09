@@ -13,6 +13,11 @@ import (
 	"time"
 )
 
+type inputData struct {
+	Info []interface{}   `json:"info"`
+	Data [][]interface{} `json:"data"`
+}
+
 type successResponse struct {
 	Status string  `json:"status"`
 	Time   float64 `json:"time"`
