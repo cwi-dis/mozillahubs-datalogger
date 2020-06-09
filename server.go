@@ -60,7 +60,7 @@ func writeToFile(path string, body *inputData) error {
 }
 
 func parseRequestBody(body []byte) (*inputData, error) {
-	var bodyData *inputData
+	var bodyData *inputData = &inputData{}
 
 	if err := json.Unmarshal(body, bodyData); err != nil {
 		return nil, err
