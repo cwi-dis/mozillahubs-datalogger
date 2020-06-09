@@ -51,7 +51,11 @@ func writeToFile(path string, body *inputData) error {
 		dataPart := ""
 
 		for j := 0; j < len(body.Data[i]); j++ {
-			dataPart += fmt.Sprintf("%v,", body.Data[i][j])
+			if body.Data[i][j] == nil {
+				dataPart += fmt.Sprintf(",")
+			} else {
+				dataPart += fmt.Sprintf("%v,", body.Data[i][j])
+			}
 		}
 
 		outFile.WriteString(infoPart + dataPart[:len(dataPart)-1] + "\n")
