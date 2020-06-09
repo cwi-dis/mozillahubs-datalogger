@@ -32,7 +32,7 @@ func getTimestamp() float64 {
 	return float64(now.UnixNano()) / math.Pow10(9)
 }
 
-func writeToFile(path string, body string) error {
+func writeToFile(path string, body *inputData) error {
 	outFile, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0744)
 
 	if err != nil {
@@ -40,9 +40,20 @@ func writeToFile(path string, body string) error {
 	}
 
 	defer outFile.Close()
+	infoPart := ""
 
-	if _, err := outFile.WriteString(body + "\n"); err != nil {
-		return err
+	for i := 0; i < len(body.Info); i++ {
+		infoPart += fmt.Sprintf("%v, ", body.Info[i])
+	}
+
+	for i := 0; i < len(body.Data); i++ {
+		dataPart := ""
+
+		for j := 0; j < len(body.Data[i]); j++ {
+			dataPart += fmt.Sprintf("%v, ", body.Data[i][j])
+		}
+
+		outFile.WriteString(infoPart + dataPart[:len(dataPart)-2])
 	}
 
 	return nil
@@ -88,12 +99,8 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 			}
 
 			saveName := path.Join(saveDir, time.Now().Format("datalog-2006-01-02.json"))
-			saveData, _ := json.Marshal(map[string]interface{}{
-				"time": timestamp,
-				"data": bodyData,
-			})
 
-			if err := writeToFile(saveName, string(saveData)); err != nil {
+			if err := writeToFile(saveName, bodyData); err != nil {
 				log.Println("Could not save data to file:", err)
 
 				msg, _ := json.Marshal(&errorResponse{Status: "error"})
