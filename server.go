@@ -48,20 +48,14 @@ func writeToFile(path string, body string) error {
 	return nil
 }
 
-func parseRequestBody(body []byte) ([]interface{}, error) {
-	var bodyData []interface{}
+func parseRequestBody(body []byte) (*inputData, error) {
+	var bodyData *inputData
 
-	if err := json.Unmarshal(body, &bodyData); err == nil {
-		return bodyData, nil
-	}
-
-	var bodyAsObject interface{}
-
-	if err := json.Unmarshal(body, &bodyAsObject); err != nil {
+	if err := json.Unmarshal(body, bodyData); err != nil {
 		return nil, err
 	}
 
-	return []interface{}{bodyAsObject}, nil
+	return bodyData, nil
 }
 
 func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Request) {
