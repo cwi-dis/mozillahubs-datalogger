@@ -34,6 +34,7 @@ func getTimestamp() float64 {
 }
 
 func writeToFile(path string, body *inputData) error {
+  start := time.Now().UnixNano()
 	outFile, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0744)
 
 	if err != nil {
@@ -65,10 +66,12 @@ func writeToFile(path string, body *inputData) error {
 		outFile.WriteString(infoPart + dataPart[:len(dataPart)-1] + "\n")
 	}
 
+	log.Printf("writeToFile %d", time.Now().UnixNano() - start)
 	return nil
 }
 
 func parseRequestBody(body *[]byte) (*inputData, error) {
+  start := time.Now().UnixNano()
 	var bodyData *inputData = &inputData{}
 
 	if err := json.Unmarshal(*body, bodyData); err != nil {
@@ -79,6 +82,7 @@ func parseRequestBody(body *[]byte) (*inputData, error) {
 		return nil, errors.New("Required fields are missing or invalid")
 	}
 
+	log.Printf("parseRequestBody %d", time.Now().UnixNano() - start)
 	return bodyData, nil
 }
 
@@ -86,6 +90,7 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 	return func(writer http.ResponseWriter, req *http.Request) {
 		if req.Method == http.MethodPost {
 			log.Println("Processing request")
+      start := time.Now().UnixNano()
 			var err error
 
 			timestamp := getTimestamp()
@@ -127,6 +132,7 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 				Time:   timestamp,
 			})
 
+      log.Printf("createHandlerWithPath %d", time.Now().UnixNano() - start)
 			fmt.Fprintf(writer, string(msg))
 		} else {
 			http.NotFound(writer, req)
