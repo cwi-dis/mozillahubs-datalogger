@@ -91,9 +91,8 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 		if req.Method == http.MethodPost {
 			log.Println("Processing request")
 			start := time.Now().UnixNano()
-			var err error
 
-			timestamp := getTimestamp()
+			var err error
 			body, err := ioutil.ReadAll(req.Body)
 
 			if err != nil {
@@ -129,7 +128,7 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 
 			msg, _ := json.Marshal(&successResponse{
 				Status: "ok",
-				Time:   timestamp,
+				Time:   getTimestamp(),
 			})
 
 			log.Printf("createHandlerWithPath %d", time.Now().UnixNano()-start)
