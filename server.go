@@ -68,10 +68,10 @@ func writeToFile(path string, body *inputData) error {
 	return nil
 }
 
-func parseRequestBody(body []byte) (*inputData, error) {
+func parseRequestBody(body *[]byte) (*inputData, error) {
 	var bodyData *inputData = &inputData{}
 
-	if err := json.Unmarshal(body, bodyData); err != nil {
+	if err := json.Unmarshal(*body, bodyData); err != nil {
 		return nil, err
 	}
 
@@ -100,7 +100,7 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 				return
 			}
 
-			bodyData, err := parseRequestBody(body)
+			bodyData, err := parseRequestBody(&body)
 
 			if err != nil {
 				log.Println("Could not decode body data:", err)
