@@ -111,7 +111,7 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 				return
 			}
 
-			saveName := path.Join(saveDir, time.Now().Format("datalog-2006-01-02.json"))
+			saveName := path.Join(saveDir, time.Now().Format("datalog-2006-01-02.csv"))
 
 			if err := writeToFile(saveName, bodyData); err != nil {
 				log.Println("Could not save data to file:", err)
