@@ -155,7 +155,11 @@ func startServer(saveDir string, port int) {
 	log.Printf("Server listening on port %d", port)
 
 	http.HandleFunc("/mozillahubs", createHandlerWithPath(saveDir))
-	http.ListenAndServe(portSpec, nil)
+	err := http.ListenAndServe(portSpec, nil)
+
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func main() {
