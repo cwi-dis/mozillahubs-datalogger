@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"sync"
 	"time"
 )
 
@@ -97,6 +98,8 @@ func parseRequestBody(body *[]byte) (*inputData, error) {
 }
 
 func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Request) {
+	var mutex = &sync.Mutex{}
+
 	return func(writer http.ResponseWriter, req *http.Request) {
 		if req.Method == http.MethodPost {
 			log.Println("Processing request")
@@ -126,8 +129,10 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 			}
 
 			saveName := path.Join(saveDir, time.Now().Format("datalog-2006-01-02.csv.gz"))
+			mutex.Lock()
 
 			if err := writeToFile(saveName, bodyData); err != nil {
+				mutex.Unlock()
 				log.Println("Could not save data to file:", err)
 
 				msg, _ := json.Marshal(&errorResponse{Status: "error"})
@@ -135,6 +140,8 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 
 				return
 			}
+
+			mutex.Unlock()
 
 			msg, _ := json.Marshal(&successResponse{
 				Status: "ok",
