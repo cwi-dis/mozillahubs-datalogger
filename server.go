@@ -115,10 +115,12 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 				return
 			}
 
-			saveName := path.Join(saveDir, time.Now().Format("datalog-2006-01-02.csv.gz"))
+			fileName := time.Now().Format("datalog-2006-01-02.csv.gz")
+			savePath := path.Join(saveDir, fileName)
+
 			mutex.Lock()
 
-			if err := writeToFile(saveName, bodyData); err != nil {
+			if err := writeToFile(savePath, bodyData); err != nil {
 				mutex.Unlock()
 				log.Println("Could not save data to file:", err)
 
