@@ -1,6 +1,7 @@
 package main
 
 import (
+	"compress/gzip"
 	"encoding/json"
 	"errors"
 	"flag"
@@ -41,7 +42,10 @@ func writeToFile(path string, body *inputData) error {
 		return err
 	}
 
+	zipWriter := gzip.NewWriter(outFile)
 	defer outFile.Close()
+	defer zipWriter.Close()
+
 	infoPart := ""
 
 	for i := 0; i < len(body.Info); i++ {
@@ -63,7 +67,7 @@ func writeToFile(path string, body *inputData) error {
 			}
 		}
 
-		outFile.WriteString(infoPart + dataPart[:len(dataPart)-1] + "\n")
+		zipWriter.Write([]byte(infoPart + dataPart[:len(dataPart)-1] + "\n"))
 	}
 
 	log.Printf("writeToFile %d", time.Now().UnixNano()-start)
@@ -115,7 +119,7 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 				return
 			}
 
-			saveName := path.Join(saveDir, time.Now().Format("datalog-2006-01-02.csv"))
+			saveName := path.Join(saveDir, time.Now().Format("datalog-2006-01-02.csv.gz"))
 
 			if err := writeToFile(saveName, bodyData); err != nil {
 				log.Println("Could not save data to file:", err)
