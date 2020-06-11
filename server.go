@@ -35,6 +35,8 @@ func getTimestamp() float64 {
 }
 
 func writeToFile(path string, body *inputData) error {
+	var err error
+
 	start := time.Now().UnixNano()
 	outFile, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0744)
 
@@ -42,10 +44,14 @@ func writeToFile(path string, body *inputData) error {
 		return err
 	}
 
-	zipWriter := gzip.NewWriter(outFile)
 	defer outFile.Close()
-	defer zipWriter.Close()
+	zipWriter, err := gzip.NewWriterLevel(outFile, gzip.BestCompression)
 
+	if err != nil {
+		return err
+	}
+
+	defer zipWriter.Close()
 	infoPart := ""
 
 	for i := 0; i < len(body.Info); i++ {
