@@ -4,8 +4,7 @@ import requests
 import sys
 
 
-
-def make_request(host):
+def make_request(host: str) -> bool:
     data = []
 
     for _ in range(random.randint(1, 400)):
@@ -28,7 +27,7 @@ def make_request(host):
     return res.ok
 
 
-def main():
+def main() -> None:
     if len(sys.argv) < 2:
         print("USAGE:", sys.argv[0], "endpoint")
         sys.exit(1)
