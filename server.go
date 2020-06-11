@@ -35,8 +35,6 @@ func getTimestamp() float64 {
 }
 
 func writeToFile(path string, body *inputData) error {
-	var err error
-
 	start := time.Now().UnixNano()
 	outFile, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0744)
 
@@ -106,7 +104,6 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 			log.Println("Processing request")
 			start := time.Now().UnixNano()
 
-			var err error
 			bodyData, err := parseRequestBody(req)
 
 			if err != nil {
