@@ -6,7 +6,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"math"
 	"net/http"
@@ -81,11 +80,13 @@ func writeToFile(path string, body *inputData) error {
 	return nil
 }
 
-func parseRequestBody(body *[]byte) (*inputData, error) {
+func parseRequestBody(req *http.Request) (*inputData, error) {
 	start := time.Now().UnixNano()
+	jsonDecoder := json.NewDecoder(req.Body)
+
 	var bodyData *inputData = &inputData{}
 
-	if err := json.Unmarshal(*body, bodyData); err != nil {
+	if err := jsonDecoder.Decode(bodyData); err != nil {
 		return nil, err
 	}
 
@@ -106,18 +107,7 @@ func createHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 			start := time.Now().UnixNano()
 
 			var err error
-			body, err := ioutil.ReadAll(req.Body)
-
-			if err != nil {
-				log.Println("Could not read request body:", err)
-
-				msg, _ := json.Marshal(&errorResponse{Status: "error"})
-				http.Error(writer, string(msg), http.StatusBadRequest)
-
-				return
-			}
-
-			bodyData, err := parseRequestBody(&body)
+			bodyData, err := parseRequestBody(req)
 
 			if err != nil {
 				log.Println("Could not decode body data:", err)
