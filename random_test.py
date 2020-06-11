@@ -1,24 +1,26 @@
 import json
+import random
 import requests
 import sys
 
-from random import choices, randint, random
 
 
 def make_request(host):
     data = []
 
-    for _ in range(randint(1, 400)):
+    for _ in range(random.randint(1, 400)):
         data.append([
-            "".join(choices("abcdefghijklmnopqrstuvwxzy", k=10)),
-            random(),
-            random()
+            "".join(random.choices("abcdefghijklmnopqrstuvwxzy", k=10)),
+            random.random(),
+            random.random()
         ])
 
     res = requests.post(
         host,
         data=json.dumps({
-            "info": ["huh", randint(1, 100), randint(1, 100)],
+            "info": [
+                "huh", random.randint(1, 100), random.randint(1, 100)
+            ],
             "data": data
         })
     )
