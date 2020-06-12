@@ -67,26 +67,26 @@ func writeToFile(path string, body *inputData) error {
 	infoPart := ""
 
 	// Collect contents of key 'info' into a single string delimited by commas
-	for i := 0; i < len(body.Info); i++ {
+	for _, item := range body.Info {
 		// Skip nil values
-		if body.Info[i] == nil {
+		if item == nil {
 			infoPart += ","
 		} else {
-			infoPart += fmt.Sprintf("%v,", body.Info[i])
+			infoPart += fmt.Sprintf("%v,", item)
 		}
 	}
 
 	// Iterate over key 'data'
-	for i := 0; i < len(body.Data); i++ {
+	for _, entry := range body.Data {
 		dataPart := ""
 
 		// Collect contents into a single string delimited by commas
-		for j := 0; j < len(body.Data[i]); j++ {
+		for _, item := range entry {
 			// Skip nil values
-			if body.Data[i][j] == nil {
+			if item == nil {
 				dataPart += ","
 			} else {
-				dataPart += fmt.Sprintf("%v,", body.Data[i][j])
+				dataPart += fmt.Sprintf("%v,", item)
 			}
 		}
 
