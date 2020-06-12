@@ -70,7 +70,7 @@ func writeToFile(path string, body *inputData) error {
 	for i := 0; i < len(body.Info); i++ {
 		// Skip nil values
 		if body.Info[i] == nil {
-			infoPart += fmt.Sprintf(",")
+			infoPart += ","
 		} else {
 			infoPart += fmt.Sprintf("%v,", body.Info[i])
 		}
@@ -84,7 +84,7 @@ func writeToFile(path string, body *inputData) error {
 		for j := 0; j < len(body.Data[i]); j++ {
 			// Skip nil values
 			if body.Data[i][j] == nil {
-				dataPart += fmt.Sprintf(",")
+				dataPart += ","
 			} else {
 				dataPart += fmt.Sprintf("%v,", body.Data[i][j])
 			}
