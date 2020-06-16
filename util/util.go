@@ -31,7 +31,7 @@ func GetTimestamp() float64 {
 // opened in append mode. All writes to the file are GZip compressed. If the
 // function encounters an error at any point, an error is returned.
 func WriteToFile(path string, body *InputData) error {
-	start := time.Now().UnixNano()
+	start := time.Now()
 	// Open file in append mode or create it otherwise
 	outFile, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0744)
 
@@ -78,7 +78,7 @@ func WriteToFile(path string, body *InputData) error {
 		zipWriter.Write([]byte(infoPart + dataPart[:len(dataPart)-1] + "\n"))
 	}
 
-	log.Printf("writeToFile %d", time.Now().UnixNano()-start)
+	log.Printf("writeToFile %d", time.Now().Sub(start))
 	return nil
 }
 
@@ -88,7 +88,7 @@ func WriteToFile(path string, body *InputData) error {
 // also ensures that the keys 'info' and 'data' are present in the decoded data
 // and are nonempty.
 func ParseRequestBody(req *http.Request) (*InputData, error) {
-	start := time.Now().UnixNano()
+	start := time.Now()
 	// Initialise new decoder using body stream
 	jsonDecoder := json.NewDecoder(req.Body)
 
@@ -105,6 +105,6 @@ func ParseRequestBody(req *http.Request) (*InputData, error) {
 	}
 
 	// Return pointer to data if successful
-	log.Printf("parseRequestBody %d", time.Now().UnixNano()-start)
+	log.Printf("parseRequestBody %d", time.Now().Sub(start))
 	return bodyData, nil
 }

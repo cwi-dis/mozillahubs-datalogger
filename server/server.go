@@ -37,7 +37,7 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 		// Make sure request is a POST request
 		if req.Method == http.MethodPost {
 			log.Println("Processing request")
-			start := time.Now().UnixNano()
+			start := time.Now()
 
 			// Attempt to decode the request body as JSON
 			bodyData, err := util.ParseRequestBody(req)
@@ -81,7 +81,7 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 				Time:   util.GetTimestamp(),
 			})
 
-			log.Printf("createHandlerWithPath %d", time.Now().UnixNano()-start)
+			log.Printf("createHandlerWithPath %d", time.Now().Sub(start))
 			// Write response to client
 			fmt.Fprintf(writer, string(msg))
 		} else {
