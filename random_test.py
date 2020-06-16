@@ -2,24 +2,26 @@ import json
 import random
 import requests
 import sys
+from string import ascii_letters
 
 
 def make_request(host: str) -> bool:
-    data = []
+    info = [
+        "".join(random.choices(ascii_letters, k=5)),
+        random.randint(1, 100),
+        random.randint(1, 100)
+    ]
 
-    for _ in range(random.randint(1, 400)):
-        data.append([
-            "".join(random.choices("abcdefghijklmnopqrstuvwxzy", k=10)),
-            random.random(),
-            random.random()
-        ])
+    data = [[
+        "".join(random.choices(ascii_letters, k=10)),
+        random.random(),
+        random.random()
+    ] for _ in range(random.randint(1, 400))]
 
     res = requests.post(
         host,
         data=json.dumps({
-            "info": [
-                "huh", random.randint(1, 100), random.randint(1, 100)
-            ],
+            "info": info,
             "data": data
         })
     )
