@@ -19,6 +19,11 @@ type InputData struct {
 	Data [][]interface{} `json:"data"`
 }
 
+// ToMSec converts the given Duration value into seconds represented as float64.
+func ToMSec(d time.Duration) float64 {
+	return float64(d) / math.Pow10(6)
+}
+
 // GetTimestamp returns the current Unix timestamp in seconds as a float.
 func GetTimestamp() float64 {
 	now := time.Now()
@@ -78,7 +83,7 @@ func WriteToFile(path string, body *InputData) error {
 		zipWriter.Write([]byte(infoPart + dataPart[:len(dataPart)-1] + "\n"))
 	}
 
-	log.Printf("writeToFile %d", time.Now().Sub(start))
+	log.Printf("writeToFile %.3f", ToMSec(time.Now().Sub(start)))
 	return nil
 }
 
@@ -105,6 +110,6 @@ func ParseRequestBody(req *http.Request) (*InputData, error) {
 	}
 
 	// Return pointer to data if successful
-	log.Printf("parseRequestBody %d", time.Now().Sub(start))
+	log.Printf("parseRequestBody %.3f", ToMSec(time.Now().Sub(start)))
 	return bodyData, nil
 }

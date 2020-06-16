@@ -81,7 +81,7 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 				Time:   util.GetTimestamp(),
 			})
 
-			log.Printf("createHandlerWithPath %d", time.Now().Sub(start))
+			log.Printf("createHandlerWithPath %.3f", util.ToMSec(time.Now().Sub(start)))
 			// Write response to client
 			fmt.Fprintf(writer, string(msg))
 		} else {
