@@ -35,59 +35,60 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 	// Return HTTP handler function
 	return func(writer http.ResponseWriter, req *http.Request) {
 		// Make sure request is a POST request
-		if req.Method == http.MethodPost {
-			log.Println("Processing request")
-			start := time.Now()
-
-			// Attempt to decode the request body as JSON
-			bodyData, err := util.ParseRequestBody(req)
-
-			if err != nil {
-				log.Println("Could not decode body data:", err)
-
-				// Send error message with code 400 to client
-				msg, _ := json.Marshal(&ErrorResponse{Status: "error"})
-				http.Error(writer, string(msg), http.StatusBadRequest)
-
-				return
-			}
-
-			// Generate filename and save path
-			fileName := time.Now().Format("datalog-2006-01-02.csv.gz")
-			savePath := path.Join(saveDir, fileName)
-
-			// Lock the mutex for file access
-			mutex.Lock()
-
-			// Attempt to write the data to a file
-			if err := util.WriteToFile(savePath, bodyData); err != nil {
-				// Unlock mutex and handle error
-				mutex.Unlock()
-				log.Println("Could not save data to file:", err)
-
-				// Send error message with code 400 to client
-				msg, _ := json.Marshal(&ErrorResponse{Status: "error"})
-				http.Error(writer, string(msg), http.StatusBadRequest)
-
-				return
-			}
-
-			// Unlock mutex
-			mutex.Unlock()
-
-			// Generate response JSON with current timestamp
-			msg, _ := json.Marshal(&SuccessResponse{
-				Status: "ok",
-				Time:   util.GetTimestamp(),
-			})
-
-			log.Printf("createHandlerWithPath %.3f", util.ToMSec(time.Now().Sub(start)))
-			// Write response to client
-			fmt.Fprintf(writer, string(msg))
-		} else {
+		if req.Method != http.MethodPost {
 			// Send 404 to client if request is not POST
 			http.NotFound(writer, req)
+			return
 		}
+
+		log.Println("Processing request")
+		start := time.Now()
+
+		// Attempt to decode the request body as JSON
+		bodyData, err := util.ParseRequestBody(req)
+
+		if err != nil {
+			log.Println("Could not decode body data:", err)
+
+			// Send error message with code 400 to client
+			msg, _ := json.Marshal(&ErrorResponse{Status: "error"})
+			http.Error(writer, string(msg), http.StatusBadRequest)
+
+			return
+		}
+
+		// Generate filename and save path
+		fileName := time.Now().Format("datalog-2006-01-02.csv.gz")
+		savePath := path.Join(saveDir, fileName)
+
+		// Lock the mutex for file access
+		mutex.Lock()
+
+		// Attempt to write the data to a file
+		if err := util.WriteToFile(savePath, bodyData); err != nil {
+			// Unlock mutex and handle error
+			mutex.Unlock()
+			log.Println("Could not save data to file:", err)
+
+			// Send error message with code 400 to client
+			msg, _ := json.Marshal(&ErrorResponse{Status: "error"})
+			http.Error(writer, string(msg), http.StatusBadRequest)
+
+			return
+		}
+
+		// Unlock mutex
+		mutex.Unlock()
+
+		// Generate response JSON with current timestamp
+		msg, _ := json.Marshal(&SuccessResponse{
+			Status: "ok",
+			Time:   util.GetTimestamp(),
+		})
+
+		log.Printf("createHandlerWithPath %.3f", util.ToMSec(time.Now().Sub(start)))
+		// Write response to client
+		fmt.Fprintf(writer, string(msg))
 	}
 }
 

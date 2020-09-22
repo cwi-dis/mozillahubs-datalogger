@@ -109,7 +109,7 @@ func ParseRequestBody(req *http.Request) (*InputData, error) {
 		return nil, errors.New("Required fields are missing or invalid")
 	}
 
-	// Return pointer to data if successful
 	log.Printf("parseRequestBody %.3f", ToMSec(time.Now().Sub(start)))
+	// Return pointer to data if successful
 	return bodyData, nil
 }
