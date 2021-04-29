@@ -53,7 +53,7 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 			log.Println("Could not decode body data:", err)
 
 			// Send error message with code 400 to client
-			msg, _ := json.Marshal(&ErrorResponse{Status: "Error"})
+			msg, _ := json.Marshal(&ErrorResponse{Status: "Input data invalid"})
 			http.Error(writer, string(msg), http.StatusBadRequest)
 
 			return
@@ -72,9 +72,9 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 			mutex.Unlock()
 			log.Println("Could not save data to file:", err)
 
-			// Send error message with code 400 to client
-			msg, _ := json.Marshal(&ErrorResponse{Status: "Error"})
-			http.Error(writer, string(msg), http.StatusBadRequest)
+			// Send error message with code 500 to client
+			msg, _ := json.Marshal(&ErrorResponse{Status: "Could not write to file"})
+			http.Error(writer, string(msg), http.StatusInternalServerError)
 
 			return
 		}
