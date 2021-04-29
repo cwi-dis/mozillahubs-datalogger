@@ -51,7 +51,7 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 			log.Println("Could not decode body data:", err)
 
 			// Send error message with code 400 to client
-			msg, _ := json.Marshal(&ErrorResponse{Status: "error"})
+			msg, _ := json.Marshal(&ErrorResponse{Status: "Error"})
 			http.Error(writer, string(msg), http.StatusBadRequest)
 
 			return
@@ -71,7 +71,7 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 			log.Println("Could not save data to file:", err)
 
 			// Send error message with code 400 to client
-			msg, _ := json.Marshal(&ErrorResponse{Status: "error"})
+			msg, _ := json.Marshal(&ErrorResponse{Status: "Error"})
 			http.Error(writer, string(msg), http.StatusBadRequest)
 
 			return
@@ -82,7 +82,7 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 
 		// Generate response JSON with current timestamp
 		msg, _ := json.Marshal(&SuccessResponse{
-			Status: "ok",
+			Status: "OK",
 			Time:   util.GetTimestamp(),
 		})
 
