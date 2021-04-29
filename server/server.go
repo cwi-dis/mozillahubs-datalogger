@@ -36,8 +36,10 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 	return func(writer http.ResponseWriter, req *http.Request) {
 		// Make sure request is a POST request
 		if req.Method != http.MethodPost {
-			// Send 404 to client if request is not POST
-			http.NotFound(writer, req)
+			// Send error message with code 405 to client
+			msg, _ := json.Marshal(&ErrorResponse{Status: "Method not allowed"})
+			http.Error(writer, string(msg), http.StatusMethodNotAllowed)
+
 			return
 		}
 
