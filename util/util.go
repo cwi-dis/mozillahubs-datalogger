@@ -83,7 +83,7 @@ func WriteToFile(path string, body *InputData) error {
 		zipWriter.Write([]byte(infoPart + dataPart[:len(dataPart)-1] + "\n"))
 	}
 
-	log.Printf("writeToFile %.3f", ToMSec(time.Now().Sub(start)))
+	log.Printf("writeToFile %.3f", ToMSec(time.Since(start)))
 	return nil
 }
 
@@ -106,10 +106,10 @@ func ParseRequestBody(req *http.Request) (*InputData, error) {
 
 	// Make sure the required keys are present and nonempty
 	if len(bodyData.Info) == 0 || len(bodyData.Data) == 0 {
-		return nil, errors.New("Required fields are missing or invalid")
+		return nil, errors.New("required fields are missing or invalid")
 	}
 
-	log.Printf("parseRequestBody %.3f", ToMSec(time.Now().Sub(start)))
+	log.Printf("parseRequestBody %.3f", ToMSec(time.Since(start)))
 	// Return pointer to data if successful
 	return bodyData, nil
 }
