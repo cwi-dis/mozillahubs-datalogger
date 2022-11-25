@@ -65,11 +65,11 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 
 		// Lock the mutex for file access
 		mutex.Lock()
+		defer mutex.Unlock()
 
 		// Attempt to write the data to a file
 		if err := util.WriteToFile(savePath, bodyData); err != nil {
-			// Unlock mutex and handle error
-			mutex.Unlock()
+			// Handle error
 			log.Println("Could not save data to file:", err)
 
 			// Send error message with code 500 to client
@@ -78,9 +78,6 @@ func CreateHandlerWithPath(saveDir string) func(http.ResponseWriter, *http.Reque
 
 			return
 		}
-
-		// Unlock mutex
-		mutex.Unlock()
 
 		// Generate response JSON with current timestamp
 		msg, _ := json.Marshal(&SuccessResponse{

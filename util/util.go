@@ -19,7 +19,8 @@ type InputData struct {
 	Data [][]interface{} `json:"data"`
 }
 
-// ToMSec converts the given Duration value into seconds represented as float64.
+// ToMSec converts the given Duration value into milliseconds represented as
+// float64.
 func ToMSec(d time.Duration) float64 {
 	return float64(d) / math.Pow10(6)
 }
