@@ -4,10 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/cwi-dis/mozillahubs-datalogger/server"
+	"github.com/cwi-dis/mozillahubs-datalogger/util"
 )
 
 // main parses the command line arguments which contain the output path as
@@ -15,14 +14,7 @@ import (
 // the flag -p
 func main() {
 	// Ignore SIGHUP so the process isn't killed when the terminal session ends
-	go func() {
-		ch := make(chan os.Signal, 1)
-		signal.Notify(ch, os.Signal(syscall.SIGHUP))
-
-		for {
-			<-ch
-		}
-	}()
+	go util.IgnoreSighup()
 
 	port := flag.Int("p", 6000, "Port to listen on")
 	flag.Parse()

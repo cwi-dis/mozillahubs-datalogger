@@ -9,6 +9,8 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -113,4 +115,15 @@ func ParseRequestBody(req *http.Request) (*InputData, error) {
 	log.Printf("parseRequestBody %.3f", ToMSec(time.Since(start)))
 	// Return pointer to data if successful
 	return bodyData, nil
+}
+
+// IgnoreSighup attaches a handler to the SIGHUP signal so the program doesn't
+// quit when the terminal session ends.
+func IgnoreSighup() {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Signal(syscall.SIGHUP))
+
+	for {
+		<-ch
+	}
 }
