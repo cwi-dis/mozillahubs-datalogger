@@ -1,3 +1,3 @@
 module github.com/cwi-dis/mozillahubs-datalogger
 
-go 1.16
+go 1.19
