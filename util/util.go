@@ -132,3 +132,19 @@ func IgnoreSighup() {
 		}
 	}()
 }
+
+// CheckAndCreateFolder checks if the folder given as parameter exists and
+// creates it if not. Returns an error if directory could not be created
+func CheckAndCreateFolder(dir string) error {
+	if _, err := os.Stat(dir); !os.IsNotExist(err) {
+		log.Println("Storing data in existing directory", dir)
+
+		// Return if directory exists
+		return nil
+	}
+
+	log.Println("Creating output directory", dir)
+
+	// Attempt to create directory hierarchy
+	return os.MkdirAll(dir, 0755)
+}

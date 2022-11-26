@@ -24,5 +24,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	server.StartServer(flag.Arg(0), *port)
+	// Get target directory from command line args
+	saveDir := flag.Arg(0)
+
+	// Check if target directory exists and create it if not
+	if err := util.CheckAndCreateFolder(saveDir); err != nil {
+		fmt.Println("Could not create output directory", saveDir)
+		os.Exit(1)
+	}
+
+	// Start server
+	server.StartServer(saveDir, *port)
 }
