@@ -120,10 +120,15 @@ func ParseRequestBody(req *http.Request) (*InputData, error) {
 // IgnoreSighup attaches a handler to the SIGHUP signal so the program doesn't
 // quit when the terminal session ends.
 func IgnoreSighup() {
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, os.Signal(syscall.SIGHUP))
+	// Launching goroutine to catch SIGHUP signals
+	go func() {
+		// Listend for SIGHUP on channel
+		ch := make(chan os.Signal, 1)
+		signal.Notify(ch, os.Signal(syscall.SIGHUP))
 
-	for {
-		<-ch
-	}
+		// Listen on channel and discard signals
+		for {
+			<-ch
+		}
+	}()
 }

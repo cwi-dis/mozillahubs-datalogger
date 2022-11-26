@@ -14,7 +14,7 @@ import (
 // the flag -p
 func main() {
 	// Ignore SIGHUP so the process isn't killed when the terminal session ends
-	go util.IgnoreSighup()
+	util.IgnoreSighup()
 
 	port := flag.Int("p", 6000, "Port to listen on")
 	flag.Parse()
