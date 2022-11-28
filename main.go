@@ -13,9 +13,6 @@ import (
 // positional argument and optionally a port for the HTTP server specified by
 // the flag -p
 func main() {
-	// Ignore SIGHUP so the process isn't killed when the terminal session ends
-	util.IgnoreSighup()
-
 	port := flag.Int("p", 6000, "Port to listen on")
 	flag.Parse()
 
@@ -32,6 +29,9 @@ func main() {
 		fmt.Println("Could not create output directory", saveDir)
 		os.Exit(1)
 	}
+
+	// Ignore SIGHUP so the process isn't killed when the terminal session ends
+	util.IgnoreSighup()
 
 	// Start server
 	server.StartServer(saveDir, *port)
