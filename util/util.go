@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -147,4 +148,41 @@ func CheckAndCreateFolder(dir string) error {
 
 	// Attempt to create directory hierarchy
 	return os.MkdirAll(dir, 0755)
+}
+
+// LatestSampleTimestamp returns the modification timestamp of the latest file
+// whose name starts with 'datalog-' in the given directory.
+func LatestSampleTimestamp(dir string) (time.Time, error) {
+	// Read directory
+	files, err := os.ReadDir(dir)
+
+	// Return error if directory could not be read
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	datalogFiles := []os.DirEntry{}
+
+	// Collect entries whose name starts with 'datalog-' into list
+	for _, entry := range files {
+		if strings.HasPrefix(entry.Name(), "datalog-") {
+			datalogFiles = append(datalogFiles, entry)
+		}
+	}
+
+	// Return error if there are no 'datalog-' files in the directory
+	if len(datalogFiles) == 0 {
+		return time.Time{}, errors.New("no logs captured yet")
+	}
+
+	// Get last entry and retrieve file info
+	latestEntry := datalogFiles[len(datalogFiles)-1]
+	latestEntryInfo, err := latestEntry.Info()
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	// Return nodification time of last entry
+	return latestEntryInfo.ModTime(), nil
 }
