@@ -118,6 +118,8 @@ func CreateLastUpdateHandler(saveDir string) func(http.ResponseWriter, *http.Req
 		if err != nil {
 			msg, _ := json.Marshal(&ErrorResponse{Status: "Could not retrieve timestamp"})
 			http.Error(writer, string(msg), http.StatusInternalServerError)
+
+			return
 		}
 
 		// Generate response JSON with timestamp
@@ -141,9 +143,11 @@ func StartServer(saveDir string, port int) {
 
 	log.Printf("Server listening on port %d", port)
 
+	// Install handlers
 	http.HandleFunc("/mozillahubs", CreateLogHandler(saveDir))
 	http.HandleFunc("/latest", CreateLastUpdateHandler(saveDir))
 
+	// Start server
 	if err := http.ListenAndServe(portSpec, nil); err != nil {
 		log.Println(err)
 	}
