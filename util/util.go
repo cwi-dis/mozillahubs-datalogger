@@ -161,7 +161,7 @@ func LatestSampleTimestamp(dir string) (time.Time, error) {
 		return time.Time{}, err
 	}
 
-	datalogFiles := []os.DirEntry{}
+	datalogFiles := make([]os.DirEntry, 0, len(files))
 
 	// Collect entries whose name starts with 'datalog-' into list
 	for _, entry := range files {
@@ -176,8 +176,7 @@ func LatestSampleTimestamp(dir string) (time.Time, error) {
 	}
 
 	// Get last entry and retrieve file info
-	latestEntry := datalogFiles[len(datalogFiles)-1]
-	latestEntryInfo, err := latestEntry.Info()
+	latestEntryInfo, err := datalogFiles[len(datalogFiles)-1].Info()
 
 	if err != nil {
 		return time.Time{}, err
