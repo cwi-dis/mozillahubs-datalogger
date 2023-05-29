@@ -57,7 +57,8 @@ func WriteToFile(path string, body *InputData) error {
 	}
 
 	defer zipWriter.Close()
-	infoPart := ""
+	receivedAt := GetTimestamp()
+	infoPart := fmt.Sprintf("%f,", receivedAt)
 
 	// Collect contents of key 'info' into a single string delimited by commas
 	for _, item := range body.Info {
