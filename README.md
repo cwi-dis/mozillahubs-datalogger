@@ -23,3 +23,6 @@ stored. By default, the server listens on port 5000. This can be changed by
 passing in the desired port with the flag `-p`:
 
     ./mozillahubs-datalogger -p 5001 saveDir
+
+The modified Mozilla Hubs instance to work with this server can be found
+[here](https://github.com/cwi-dis/hubs).
